@@ -149,65 +149,65 @@ JSON document. Keep task definitions separate from per-shift task occurrences.
 
 ### 5.1 `tasks.json`
 
-- [ ] Define a task-template schema containing:
+- [x] Define a task-template schema containing:
       `id`, `title`, `category`, `notes`, `scheduled_time`, `reminder_enabled`,
       `reminder_lead_minutes`, `recurrence`, `target_shift_date`, `enabled`,
       `sort_order`, `task_type`, `shopify_details`, `created_at`, and `updated_at`.
-- [ ] Validate required fields, time formats, enum values, and non-negative
+- [x] Validate required fields, time formats, enum values, and non-negative
       reminder intervals when loading and saving.
-- [ ] Preserve unknown future fields where practical or migrate them explicitly.
+- [x] Preserve unknown future fields where practical or migrate them explicitly.
 
 ### 5.2 `daily_records.json`
 
-- [ ] Store one record per active shift date with `opened_at`, `closed_at`, and
+- [x] Store one record per active shift date with `opened_at`, `closed_at`, and
       task occurrence snapshots.
-- [ ] Give each occurrence its own ID plus `template_id`, copied title/category/
+- [x] Give each occurrence its own ID plus `template_id`, copied title/category/
       schedule/notes, `status`, `completed_at`, and reminder-fired flags.
-- [ ] Store enough snapshot data that later template edits/deletes cannot change
+- [x] Store enough snapshot data that later template edits/deletes cannot change
       old history.
 
 ### 5.3 `message_checks.json`
 
-- [ ] Store append-only events containing `id`, `shift_date`, `checked_at`,
+- [x] Store append-only events containing `id`, `shift_date`, `checked_at`,
       optional `note`, and the calculated `next_check_at`.
 
 ### 5.4 `settings.json`
 
-- [ ] Store notifications enabled, sound enabled/path, client-check interval,
+- [x] Store notifications enabled, sound enabled/path, client-check interval,
       reminder lead time, reset time, categories, time display preference, and
       the last successfully opened app version.
-- [ ] Supply safe defaults when a setting is absent.
+- [x] Supply safe defaults when a setting is absent.
 
 ### 5.5 Storage location and safety
 
-- [ ] Use `platformdirs` and store mutable data under the user's local app-data
+- [x] Use `platformdirs` and store mutable data under the user's local app-data
       directory (for example `%LOCALAPPDATA%\ShiftChecklist\data`), not beside
       a packaged executable.
-- [ ] Allow a development-only data-directory override through a dedicated
+- [x] Allow a development-only data-directory override through a dedicated
       environment variable or command-line option for tests.
-- [ ] Create missing directories/files on first launch.
-- [ ] Write JSON atomically: serialize to a temporary file, flush it, replace the
+- [x] Create missing directories/files on first launch.
+- [x] Write JSON atomically: serialize to a temporary file, flush it, replace the
       target, and retain a last-known-good `.bak` copy.
-- [ ] Protect in-process reads/writes with a lock so Kivy callbacks cannot overlap.
-- [ ] On malformed JSON, preserve the corrupt file, attempt backup recovery, and
+- [x] Protect in-process reads/writes with a lock so Kivy callbacks cannot overlap.
+- [x] On malformed JSON, preserve the corrupt file, attempt backup recovery, and
       show a clear error instead of silently deleting user data.
-- [ ] Add schema-migration hooks even if version 1 needs no migration yet.
+- [x] Add schema-migration hooks even if version 1 needs no migration yet.
 
 ## 6. Implement models and core services
 
 ### 6.1 Models
 
-- [ ] Implement typed model classes/dataclasses for task templates, occurrences,
+- [x] Implement typed model classes/dataclasses for task templates, occurrences,
       daily records, message checks, app settings, and Shopify metadata.
-- [ ] Implement `to_dict`/`from_dict` conversion at one boundary.
-- [ ] Normalize and validate user input in the models or a dedicated validator.
+- [x] Implement `to_dict`/`from_dict` conversion at one boundary.
+- [x] Normalize and validate user input in the models or a dedicated validator.
 
 ### 6.2 Storage service
 
-- [ ] Implement load/save/backup/recovery for every JSON document.
-- [ ] Seed defaults only when no task file has ever existed; never re-add defaults
+- [x] Implement load/save/backup/recovery for every JSON document.
+- [x] Seed defaults only when no task file has ever existed; never re-add defaults
       merely because the user deleted every task.
-- [ ] Add a storage health check and useful, non-sensitive log messages.
+- [x] Add a storage health check and useful, non-sensitive log messages.
 
 ### 6.3 Shift service
 
@@ -373,16 +373,16 @@ write the user's real app-data directory.
 
 ### 16.1 Model and validation tests
 
-- [ ] Test serialization round trips and default values.
-- [ ] Test blank/invalid titles, times, dates, intervals, enums, and Shopify fields.
-- [ ] Test legacy/missing/unknown JSON fields and schema-version rejection.
+- [x] Test serialization round trips and default values.
+- [x] Test blank/invalid titles, times, dates, intervals, enums, and Shopify fields.
+- [x] Test legacy/missing/unknown JSON fields and schema-version rejection.
 
 ### 16.2 Storage tests
 
-- [ ] Test first-launch creation and seed-once behavior.
-- [ ] Test atomic save, backup creation, backup recovery, and corrupt-file handling.
-- [ ] Test simulated write failures without losing the previous valid data.
-- [ ] Test concurrent callback access to the storage service.
+- [x] Test first-launch creation and seed-once behavior.
+- [x] Test atomic save, backup creation, backup recovery, and corrupt-file handling.
+- [x] Test simulated write failures without losing the previous valid data.
+- [x] Test concurrent callback access to the storage service.
 
 ### 16.3 Shift/task tests
 
@@ -485,7 +485,7 @@ Follow this order so every milestone ends in a runnable or testable state:
 
 1. [x] Product rules and acceptance examples (sections 1–2).
 2. [x] Environment, skeleton, and minimal Kivy window (sections 3–4).
-3. [ ] Schemas, models, safe storage, and tests (sections 5–6.2, 16.1–16.2).
+3. [x] Schemas, models, safe storage, and tests (sections 5–6.2, 16.1–16.2).
 4. [ ] Shift/task logic, seed data, and tests (sections 6.3–7, 16.3).
 5. [ ] App shell and Today screen with persistence (sections 8–9).
 6. [ ] Task management and Shopify workflow (sections 10–11).

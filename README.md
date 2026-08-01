@@ -97,13 +97,26 @@ milestone. Until then, a disposable bootstrap build can be produced with:
 The output is written to `dist\ShiftChecklist`. This interim command is for
 developer smoke testing, not release distribution.
 
-## Data and backup status
+## Data and backups
 
-Domain storage is not implemented yet, so the current shell creates no checklist
-data to back up. Milestone 3 will store mutable JSON below the current user's
-`%LOCALAPPDATA%\ShiftChecklist` directory using atomic writes and a
-last-known-good backup. Runtime data must never be placed in the repository or
-beside the packaged executable.
+The application stores versioned JSON below the current user's
+`%LOCALAPPDATA%\ShiftChecklist\data` directory. The minimal shell creates empty
+task, history, message-check, and settings documents; real task content is added
+in the next milestone. Runtime data is never placed in the repository or beside
+the packaged executable.
+
+Each save uses an atomic replacement and keeps the previous valid primary as a
+`.bak` file. Malformed data is preserved with a `.corrupt-<id>` suffix before a
+valid backup is restored. To make a manual backup, close the app and copy the
+entire `ShiftChecklist\data` directory to another local drive. See
+[the version 1 data schema](docs/DATA_SCHEMA.md) for the exact contracts and
+recovery behavior.
+
+For isolated development data:
+
+```powershell
+.\.venv\Scripts\python.exe main.py --data-dir .\dev-data
+```
 
 ## Troubleshooting
 

@@ -7,6 +7,7 @@ import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 # Kivy normally consumes command-line arguments during import. The application
 # owns its arguments so smoke tests and future data-directory overrides are safe.
@@ -21,7 +22,7 @@ from kivy.uix.screenmanager import ScreenManager
 
 import screens  # noqa: F401 - imports register screen classes for the KV loader
 from constants import APP_NAME, APP_VERSION
-from services.app_state import ServiceContainer
+from services import ServiceContainer, StorageService
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
@@ -38,10 +39,17 @@ class ShiftChecklistApp(App):
 
     title = APP_NAME
 
-    def __init__(self, *, smoke_test: bool = False, **kwargs: object) -> None:
+    def __init__(
+        self,
+        *,
+        smoke_test: bool = False,
+        data_directory: Path | None = None,
+        **kwargs: object,
+    ) -> None:
         super().__init__(**kwargs)
         self.smoke_test = smoke_test
         self.services = ServiceContainer()
+        self.services.register("storage", StorageService(data_directory))
 
     def build(self) -> ScreenManager:
         """Load the KV layout and return the root screen manager."""
@@ -55,8 +63,9 @@ class ShiftChecklistApp(App):
         return root
 
     def on_start(self) -> None:
-        """Stop automatically when invoked by the bootstrap smoke test."""
+        """Initialize local documents and optionally stop after smoke validation."""
 
+        self.services.get("storage").initialize_all()
         if self.smoke_test:
             Clock.schedule_once(lambda _elapsed: self.stop(), 0.35)
 
@@ -71,6 +80,11 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="open the Kivy window briefly, then exit successfully",
     )
     parser.add_argument(
+        "--data-dir",
+        type=Path,
+        help="override the local data directory for development or testing",
+    )
+    parser.add_argument(
         "--version",
         action="version",
         version=f"%(prog)s {APP_VERSION}",
@@ -82,7 +96,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     """Run the application and return a process exit code."""
 
     args = parse_args(argv)
-    ShiftChecklistApp(smoke_test=args.smoke_test).run()
+    if args.smoke_test and args.data_dir is None:
+        with TemporaryDirectory(prefix="shift-checklist-smoke-") as temporary_directory:
+            ShiftChecklistApp(
+                smoke_test=True,
+                data_directory=Path(temporary_directory),
+            ).run()
+    else:
+        ShiftChecklistApp(
+            smoke_test=args.smoke_test,
+            data_directory=args.data_dir,
+        ).run()
     return 0
 
 

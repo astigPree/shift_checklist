@@ -6,7 +6,7 @@ import pytest
 
 from constants import APP_NAME, APP_VERSION, DEFAULT_CATEGORIES
 from main import ShiftChecklistApp, parse_args, resource_root
-from services.app_state import ServiceContainer
+from services import ServiceContainer, StorageService
 
 
 def test_application_metadata_is_present() -> None:
@@ -19,9 +19,10 @@ def test_kv_file_exists_at_resource_root() -> None:
     assert (resource_root() / "shift_checklist.kv").is_file()
 
 
-def test_application_uses_service_container() -> None:
-    app = ShiftChecklistApp()
+def test_application_uses_service_container(tmp_path: Path) -> None:
+    app = ShiftChecklistApp(data_directory=tmp_path)
     assert isinstance(app.services, ServiceContainer)
+    assert isinstance(app.services.get("storage"), StorageService)
 
 
 def test_service_container_registers_and_returns_a_service() -> None:
@@ -56,6 +57,10 @@ def test_service_container_reports_missing_service() -> None:
 def test_smoke_test_argument_is_opt_in() -> None:
     assert parse_args([]).smoke_test is False
     assert parse_args(["--smoke-test"]).smoke_test is True
+
+
+def test_data_directory_argument_is_a_path(tmp_path: Path) -> None:
+    assert parse_args(["--data-dir", str(tmp_path)]).data_dir == tmp_path
 
 
 def test_project_root_is_absolute() -> None:

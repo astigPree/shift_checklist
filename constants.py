@@ -8,6 +8,8 @@ APP_NAME = "Shift Checklist"
 APP_ID = "shift-checklist"
 APP_AUTHOR = "Shift Checklist"
 APP_VERSION = "0.1.0-dev"
+SCHEMA_VERSION = 1
+DATA_DIRECTORY_ENV_VAR = "SHIFT_CHECKLIST_DATA_DIR"
 
 DEFAULT_RESET_TIME = "12:00"
 DEFAULT_CLIENT_CHECK_INTERVAL_MINUTES = 30
@@ -54,3 +56,17 @@ class Priority(StrEnum):
     NORMAL = "Normal"
     HIGH = "High"
     URGENT = "Urgent"
+
+
+class TaskType(StrEnum):
+    """Supported task data shapes."""
+
+    GENERAL = "general"
+    SHOPIFY = "shopify"
+
+
+class TimeFormat(StrEnum):
+    """Supported clock display preferences."""
+
+    TWELVE_HOUR = "12h"
+    TWENTY_FOUR_HOUR = "24h"
