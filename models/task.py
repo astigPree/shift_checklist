@@ -329,9 +329,26 @@ class TaskOccurrence:
             raise ModelValidationError("Shopify occurrences require shopify_details")
         if self.task_type is TaskType.GENERAL and self.shopify_details is not None:
             raise ModelValidationError("general occurrences cannot contain shopify_details")
+        if self.shopify_details is not None:
+            shopify_completed = self.shopify_details.status is ShopifyStatus.COMPLETED
+            occurrence_completed = self.status is TaskStatus.COMPLETED
+            if shopify_completed != occurrence_completed:
+                raise ModelValidationError(
+                    "Shopify occurrence status must match shopify_details.status"
+                )
+            if occurrence_completed and self.shopify_details.completed_at != self.completed_at:
+                raise ModelValidationError(
+                    "Shopify completion timestamps must match the occurrence"
+                )
 
     @classmethod
-    def from_template(cls, template: TaskTemplate, shift_date: date) -> TaskOccurrence:
+    def from_template(
+        cls,
+        template: TaskTemplate,
+        shift_date: date,
+        *,
+        created_at: datetime | None = None,
+    ) -> TaskOccurrence:
         """Create an independent occurrence snapshot from a template."""
 
         shopify_copy = (
@@ -351,6 +368,14 @@ class TaskOccurrence:
             sort_order=template.sort_order,
             task_type=template.task_type,
             shopify_details=shopify_copy,
+            status=(
+                TaskStatus.COMPLETED
+                if shopify_copy is not None
+                and shopify_copy.status is ShopifyStatus.COMPLETED
+                else TaskStatus.PENDING
+            ),
+            completed_at=shopify_copy.completed_at if shopify_copy is not None else None,
+            created_at=created_at or _local_now(),
         )
 
     def to_dict(self) -> dict[str, Any]:

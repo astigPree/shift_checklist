@@ -7,9 +7,11 @@ and stores its data locally without requiring an account or server.
 
 ## Project status
 
-The product rules and application bootstrap are complete. A minimal Kivy shell
-with Today, Tasks, History, and Settings navigation is runnable; domain data and
-features are added in the next milestones.
+The product rules, application bootstrap, versioned storage, and core shift/task
+services are complete. A runnable Kivy shell opens the active overnight shift,
+seeds editable first-launch defaults exactly once, and automatically rolls over
+at the configured boundary. The screens remain placeholders until the UI and
+reminder milestone.
 
 ## Project documents
 
@@ -100,10 +102,10 @@ developer smoke testing, not release distribution.
 ## Data and backups
 
 The application stores versioned JSON below the current user's
-`%LOCALAPPDATA%\ShiftChecklist\data` directory. The minimal shell creates empty
-task, history, message-check, and settings documents; real task content is added
-in the next milestone. Runtime data is never placed in the repository or beside
-the packaged executable.
+`%LOCALAPPDATA%\ShiftChecklist\data` directory. On a true first launch it creates
+the task, history, message-check, and settings documents, seeds the editable
+default checklist, and opens the current shift. Runtime data is never placed in
+the repository or beside the packaged executable.
 
 Each save uses an atomic replacement and keeps the previous valid primary as a
 `.bak` file. Malformed data is preserved with a `.corrupt-<id>` suffix before a

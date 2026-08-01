@@ -211,32 +211,32 @@ JSON document. Keep task definitions separate from per-shift task occurrences.
 
 ### 6.3 Shift service
 
-- [ ] Calculate the active shift date from local time and configured reset time.
-- [ ] On startup, finalize any previously open shift before creating/loading the
+- [x] Calculate the active shift date from local time and configured reset time.
+- [x] On startup, finalize any previously open shift before creating/loading the
       current one.
-- [ ] Materialize enabled daily templates and matching one-time tasks into a new
+- [x] Materialize enabled daily templates and matching one-time tasks into a new
       daily record exactly once.
-- [ ] Mark remaining scheduled occurrences from the closed shift as `missed`.
-- [ ] Keep unscheduled incomplete occurrences as pending in history or missed,
+- [x] Mark remaining scheduled occurrences from the closed shift as `missed`.
+- [x] Keep unscheduled incomplete occurrences as pending in history or missed,
       according to the product decision in section 2, and test that rule.
 - [ ] Reschedule the next boundary whenever the reset-time setting changes.
-- [ ] Handle the app being left open across the reset boundary without requiring
+- [x] Handle the app being left open across the reset boundary without requiring
       a restart.
 
 ### 6.4 Task service
 
-- [ ] Implement create, update, soft-enable/disable, confirmed delete, and reorder.
-- [ ] Reject blank titles and invalid dates/times with user-friendly messages.
-- [ ] Implement complete/reopen operations and save immediately after each action.
-- [ ] Implement live derived states: pending, upcoming, due, overdue, completed.
-- [ ] Expose filtered/sorted collections to the UI without duplicating business
+- [x] Implement create, update, soft-enable/disable, confirmed delete, and reorder.
+- [x] Reject blank titles and invalid dates/times with user-friendly messages.
+- [x] Implement complete/reopen operations and save immediately after each action.
+- [x] Implement live derived states: pending, upcoming, due, overdue, completed.
+- [x] Expose filtered/sorted collections to the UI without duplicating business
       logic in screen classes.
 
 ### 6.5 History service
 
-- [ ] Return daily summaries and detailed task/message/Shopify records by shift.
-- [ ] Calculate completed, pending/missed, attendance, and message-check counts.
-- [ ] Keep history read-only from the initial UI.
+- [x] Return daily summaries and detailed task/message/Shopify records by shift.
+- [x] Calculate completed, pending/missed, attendance, and message-check counts.
+- [x] Keep history read-only from the initial UI.
 
 ### 6.6 Client-message check service
 
@@ -246,20 +246,20 @@ JSON document. Keep task definitions separate from per-shift task occurrences.
 
 ## 7. Seed first-launch defaults
 
-- [ ] Create editable default categories: Client Monitoring, FastDTR, Shopify,
+- [x] Create editable default categories: Client Monitoring, FastDTR, Shopify,
       End of Shift, and General.
-- [ ] Seed the default recurring tasks described in the project description.
-- [ ] Assign practical times to the FastDTR tasks and keep preparatory reminders
+- [x] Seed the default recurring tasks described in the project description.
+- [x] Assign practical times to the FastDTR tasks and keep preparatory reminders
       separate from the actual completion actions.
-- [ ] Avoid seeding “complete assigned Shopify update” as a mandatory daily task;
+- [x] Avoid seeding “complete assigned Shopify update” as a mandatory daily task;
       Shopify work should be created as a one-time conditional task when requested.
-- [ ] Store seed data in code or a versioned asset, then load it only on true first
+- [x] Store seed data in code or a versioned asset, then load it only on true first
       launch.
-- [ ] Verify every seeded task can be edited, disabled, reordered, or deleted.
+- [x] Verify every seeded task can be edited, disabled, reordered, or deleted.
 
 ## 8. Build the Kivy application shell
 
-- [ ] Create the Kivy `App`, load the KV file explicitly, initialize services,
+- [x] Create the Kivy `App`, load the KV file explicitly, initialize services,
       open the active shift, and then display the first screen.
 - [x] Use `ScreenManager` navigation for Today, Tasks, History, and Settings.
 - [ ] Add a consistent navigation bar, page title, and current date/time.
@@ -267,7 +267,7 @@ JSON document. Keep task definitions separate from per-shift task occurrences.
       styles that remain legible at common Windows scaling levels.
 - [ ] Make long task lists scrollable and support keyboard/mouse interaction.
 - [ ] Display a recoverable error dialog for load/save/notification failures.
-- [ ] Save pending changes and stop scheduled callbacks cleanly on app exit.
+- [x] Save pending changes and stop scheduled callbacks cleanly on app exit.
 
 ## 9. Implement the Today screen
 
@@ -386,12 +386,12 @@ write the user's real app-data directory.
 
 ### 16.3 Shift/task tests
 
-- [ ] Test active shift calculation before, at, and after reset time.
-- [ ] Test an overnight shift containing 4:00 AM and 8:00 AM tasks.
-- [ ] Test startup with no prior record, same open shift, and multiple missed shifts.
-- [ ] Test daily recurrence, one-time target dates, disabled tasks, edits, deletion,
+- [x] Test active shift calculation before, at, and after reset time.
+- [x] Test an overnight shift containing 4:00 AM and 8:00 AM tasks.
+- [x] Test startup with no prior record, same open shift, and multiple missed shifts.
+- [x] Test daily recurrence, one-time target dates, disabled tasks, edits, deletion,
       reorder, completion, reopening, and history snapshot immutability.
-- [ ] Test rollover while the app remains open.
+- [x] Test rollover while the app remains open.
 
 ### 16.4 Reminder/message tests
 
@@ -486,7 +486,7 @@ Follow this order so every milestone ends in a runnable or testable state:
 1. [x] Product rules and acceptance examples (sections 1–2).
 2. [x] Environment, skeleton, and minimal Kivy window (sections 3–4).
 3. [x] Schemas, models, safe storage, and tests (sections 5–6.2, 16.1–16.2).
-4. [ ] Shift/task logic, seed data, and tests (sections 6.3–7, 16.3).
+4. [x] Shift/task logic, seed data, and tests (sections 6.3–7, 16.3).
 5. [ ] App shell and Today screen with persistence (sections 8–9).
 6. [ ] Task management and Shopify workflow (sections 10–11).
 7. [ ] Reminder/client-check engine and tests (sections 6.6, 12, 16.4).

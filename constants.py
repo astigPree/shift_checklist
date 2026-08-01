@@ -70,3 +70,14 @@ class TimeFormat(StrEnum):
 
     TWELVE_HOUR = "12h"
     TWENTY_FOUR_HOUR = "24h"
+
+
+class LiveTaskState(StrEnum):
+    """Task states derived for display while a shift is open."""
+
+    PENDING = "pending"
+    UPCOMING = "upcoming"
+    DUE = "due"
+    OVERDUE = "overdue"
+    COMPLETED = "completed"
+    MISSED = "missed"
