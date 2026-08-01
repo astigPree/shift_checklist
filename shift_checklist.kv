@@ -1,0 +1,141 @@
+#:kivy 2.3.1
+#:import dp kivy.metrics.dp
+
+<NavigationBar@BoxLayout>:
+    size_hint_y: None
+    height: dp(56)
+    spacing: dp(8)
+    padding: dp(12), dp(6)
+    canvas.before:
+        Color:
+            rgba: 0.09, 0.12, 0.18, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    Button:
+        text: "Today"
+        on_release: app.root.current = "today"
+    Button:
+        text: "Tasks"
+        on_release: app.root.current = "tasks"
+    Button:
+        text: "History"
+        on_release: app.root.current = "history"
+    Button:
+        text: "Settings"
+        on_release: app.root.current = "settings"
+
+<PageHeading@Label>:
+    size_hint_y: None
+    height: dp(64)
+    color: 0.93, 0.96, 1, 1
+    font_size: "26sp"
+    bold: True
+    halign: "left"
+    text_size: self.size
+    valign: "middle"
+
+<PlaceholderCard@BoxLayout>:
+    orientation: "vertical"
+    padding: dp(20)
+    spacing: dp(8)
+    canvas.before:
+        Color:
+            rgba: 0.12, 0.16, 0.23, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(12)]
+
+<TodayScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 0.055, 0.075, 0.11, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        BoxLayout:
+            orientation: "vertical"
+            padding: dp(28), dp(18)
+            spacing: dp(16)
+            PageHeading:
+                text: "Today"
+            PlaceholderCard:
+                Label:
+                    text: "Shift Checklist is running"
+                    color: 0.93, 0.96, 1, 1
+                    font_size: "22sp"
+                Label:
+                    text: "Task data and progress arrive in the next milestone."
+                    color: 0.65, 0.72, 0.82, 1
+                    font_size: "16sp"
+        NavigationBar:
+
+<TaskManagementScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 0.055, 0.075, 0.11, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        BoxLayout:
+            orientation: "vertical"
+            padding: dp(28), dp(18)
+            PageHeading:
+                text: "Task Management"
+            Label:
+                text: "Task templates will be managed here."
+                color: 0.65, 0.72, 0.82, 1
+        NavigationBar:
+
+<HistoryScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 0.055, 0.075, 0.11, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        BoxLayout:
+            orientation: "vertical"
+            padding: dp(28), dp(18)
+            PageHeading:
+                text: "History"
+            Label:
+                text: "Closed shift records will be displayed here."
+                color: 0.65, 0.72, 0.82, 1
+        NavigationBar:
+
+<SettingsScreen>:
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 0.055, 0.075, 0.11, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        BoxLayout:
+            orientation: "vertical"
+            padding: dp(28), dp(18)
+            PageHeading:
+                text: "Settings"
+            Label:
+                text: "Reminder and shift settings will be configured here."
+                color: 0.65, 0.72, 0.82, 1
+        NavigationBar:
+
+ScreenManager:
+    TodayScreen:
+        name: "today"
+    TaskManagementScreen:
+        name: "tasks"
+    HistoryScreen:
+        name: "history"
+    SettingsScreen:
+        name: "settings"

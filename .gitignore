@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+
+# Virtual environments
+.venv/
+venv/
+
+# Test and quality output
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+
+# Packaging output
+build/
+dist/
+*.spec.bak
+
+# Runtime data and logs
+data/
+logs/
+*.log
+*.bak
+*.tmp
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -84,6 +84,39 @@ powershell -ExecutionPolicy Bypass -File scripts\smoke_test.ps1
 The smoke-test script briefly opens the real Kivy window and closes it
 automatically. It is useful after dependency or packaging changes.
 
+## Development build
+
+The reproducible release specification is created during the packaging
+milestone. Until then, a disposable bootstrap build can be produced with:
+
+```powershell
+.\.venv\Scripts\python.exe -m PyInstaller --clean --noconfirm --windowed `
+  --onedir --name ShiftChecklist --add-data "shift_checklist.kv;." main.py
+```
+
+The output is written to `dist\ShiftChecklist`. This interim command is for
+developer smoke testing, not release distribution.
+
+## Data and backup status
+
+Domain storage is not implemented yet, so the current shell creates no checklist
+data to back up. Milestone 3 will store mutable JSON below the current user's
+`%LOCALAPPDATA%\ShiftChecklist` directory using atomic writes and a
+last-known-good backup. Runtime data must never be placed in the repository or
+beside the packaged executable.
+
+## Troubleshooting
+
+- Confirm `.\.venv\Scripts\python.exe --version` reports Python 3.11.
+- Reinstall pinned packages with
+  `.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt`.
+- Run `scripts\smoke_test.ps1` to distinguish startup/provider failures from
+  later application logic failures.
+- Kivy diagnostic logs are written below `%USERPROFILE%\.kivy\logs` during
+  development.
+- Windows notifications are not wired yet; their in-app fallback is implemented
+  with the reminder milestone.
+
 ## Project structure
 
 ```text
