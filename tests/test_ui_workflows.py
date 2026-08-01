@@ -257,3 +257,28 @@ def test_app_callbacks_and_dialog_helpers(ui_app: ShiftChecklistApp, monkeypatch
     )
     confirm_button.dispatch("on_release")
     assert confirmed == [True]
+
+
+def test_failed_task_save_keeps_form_ready_for_correction(
+    ui_app: ShiftChecklistApp,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    management = ui_app.root.get_screen("tasks")
+    form = TaskForm()
+    form.reset(categories=ui_app.services.get("settings").get().categories)
+    form.ids.title_input.text = "Keep this input"
+    form.ids.category_spinner.text = "General"
+    popup = Popup()
+    dismissed: list[bool] = []
+    monkeypatch.setattr(popup, "dismiss", lambda *args: dismissed.append(True))
+    monkeypatch.setattr(
+        ui_app.services.get("tasks"),
+        "add_task",
+        lambda _template: (_ for _ in ()).throw(OSError("disk unavailable")),
+    )
+
+    management._save_form(form, None, popup)
+
+    assert form.ids.title_input.text == "Keep this input"
+    assert form.submitting is False
+    assert dismissed == []

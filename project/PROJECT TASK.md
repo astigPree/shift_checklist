@@ -357,14 +357,14 @@ JSON document. Keep task definitions separate from per-shift task occurrences.
 
 ## 15. Logging, resilience, and privacy
 
-- [ ] Add rotating local logs under the app-data directory with timestamps and
+- [x] Add rotating local logs under the app-data directory with timestamps and
       severity, excluding task notes or other unnecessary user content.
-- [ ] Add a top-level exception handler that logs the error and shows a readable
+- [x] Add a top-level exception handler that logs the error and shows a readable
       message where safe.
-- [ ] Ensure every user mutation is saved immediately or clearly marked unsaved.
-- [ ] Test abrupt close/restart and confirm valid files can still load.
-- [ ] Verify the app makes no network request during normal operation.
-- [ ] Add a manual backup procedure to the README.
+- [x] Ensure every user mutation is saved immediately or clearly marked unsaved.
+- [x] Test abrupt close/restart and confirm valid files can still load.
+- [x] Verify the app makes no network request during normal operation.
+- [x] Add a manual backup procedure to the README.
 
 ## 16. Automated tests
 
@@ -405,7 +405,7 @@ write the user's real app-data directory.
 
 - [x] Test app startup, screen navigation, add/edit/delete, complete/reopen, client
       check, Shopify status change, history view, settings save, and clean exit.
-- [ ] Run smoke tests with empty, typical, and large data sets.
+- [x] Run smoke tests with empty, typical, and large data sets.
 
 - [x] Make these local quality commands pass:
 

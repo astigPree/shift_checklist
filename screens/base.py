@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
 from typing import Any
 
@@ -12,6 +13,8 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
+
+LOGGER = logging.getLogger(__name__)
 
 
 class ServiceScreen(Screen):
@@ -31,6 +34,7 @@ class ServiceScreen(Screen):
             app.refresh_screens()
 
     def show_message(self, title: str, message: str) -> Popup:
+        LOGGER.info("Displayed user message: %s", title)
         return show_message(title, message)
 
     def show_confirmation(

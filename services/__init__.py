@@ -7,6 +7,7 @@ from services.history_service import (
     HistoryService,
     ShiftHistoryDetail,
 )
+from services.logging_service import close_application_logging, configure_logging
 from services.message_check_service import MessageCheckService
 from services.reminder_service import (
     KivySoundBackend,
@@ -79,6 +80,8 @@ __all__ = (
     "resolve_data_directory",
     "active_shift_date",
     "create_default_tasks",
+    "close_application_logging",
+    "configure_logging",
     "scheduled_datetime",
     "seed_default_tasks",
     "shift_end",

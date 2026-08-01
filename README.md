@@ -10,14 +10,16 @@ and stores its data locally without requiring an account or server.
 The product rules, versioned local storage, core services, reminder engine, and
 four main application screens are implemented. The runnable Kivy app supports
 the active checklist, task/Shopify management, client-message checks, history,
-and immediately applied settings. Packaging, resilience hardening, and full
-manual Windows acceptance testing remain before the MVP release.
+and immediately applied settings. The app also writes rotating local logs and
+surfaces storage recovery actions. Packaging and full manual Windows acceptance
+testing remain before the MVP release.
 
 ## Project documents
 
 - [Project description](project/PROJECT%20DESCRIPTION.md)
 - [Implementation task plan](project/PROJECT%20TASK.md)
 - [Product rules and acceptance examples](docs/PRODUCT_RULES.md)
+- [Windows acceptance checklist](docs/WINDOWS_ACCEPTANCE.md)
 
 ## Decision log
 
@@ -85,8 +87,17 @@ powershell -ExecutionPolicy Bypass -File scripts\smoke_test.ps1
 ```
 
 The smoke-test script opens the real Kivy window, cycles through all four
-screens, and closes it automatically. It is useful after UI, dependency, or
-packaging changes.
+screens using empty, typical, and large datasets, then closes it automatically.
+It is useful after UI, dependency, or packaging changes.
+
+To run lint, tests, coverage, and all smoke datasets as one Windows preflight:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify_source.ps1
+```
+
+The hands-on release scenarios are in
+[the Windows acceptance checklist](docs/WINDOWS_ACCEPTANCE.md).
 
 ## Development build
 
@@ -111,10 +122,27 @@ the repository or beside the packaged executable.
 
 Each save uses an atomic replacement and keeps the previous valid primary as a
 `.bak` file. Malformed data is preserved with a `.corrupt-<id>` suffix before a
-valid backup is restored. To make a manual backup, close the app and copy the
-entire `ShiftChecklist\data` directory to another local drive. See
+valid backup is restored.
+
+To make a manual backup:
+
+1. Close Shift Checklist so no save is in progress.
+2. Open Settings and note the exact data-directory path.
+3. Copy the entire `data` directory—including JSON, `.bak`, and `logs`—to a
+   dated folder on another local drive.
+4. Open several copied JSON files and confirm they are readable before relying
+   on the backup.
+
+To restore, close the app, preserve the current data directory under a different
+name, and copy the complete known-good directory back into the displayed
+location. Do not merge individual JSON files from different backup dates. See
 [the version 1 data schema](docs/DATA_SCHEMA.md) for the exact contracts and
 recovery behavior.
+
+Application logs rotate at approximately 1 MB and are stored under
+`%LOCALAPPDATA%\ShiftChecklist\data\logs\shift-checklist.log`, with up to three
+older log files retained. Logs contain lifecycle, severity, failure, and recovery
+information; task notes and client-message notes are not deliberately logged.
 
 For isolated development data:
 
