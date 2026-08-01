@@ -431,16 +431,16 @@ write the user's real app-data directory.
 - [ ] Test notification permission denied, missing sound, corrupt primary JSON,
       recovered backup, and an unwritable data directory.
 - [ ] Verify all dialogs fit onscreen and keyboard focus/navigation is usable.
-- [ ] Confirm no terminal window is required for the packaged GUI build.
+- [x] Confirm no terminal window is required for the packaged GUI build.
 
 ## 18. Package the Windows application
 
-- [ ] Add application name, semantic version, icon, and version metadata.
-- [ ] Create a reproducible PyInstaller `.spec` file that includes the KV file,
+- [x] Add application name, semantic version, icon, and version metadata.
+- [x] Create a reproducible PyInstaller `.spec` file that includes the KV file,
       icons, sounds, and required Kivy/Plyer hidden imports/providers.
-- [ ] First build a console-enabled diagnostic version and resolve all missing
+- [x] First build a console-enabled diagnostic version and resolve all missing
       dependency or asset warnings.
-- [ ] Build the release version (prefer `onedir` initially for easier debugging;
+- [x] Build the release version (prefer `onedir` initially for easier debugging;
       move to `onefile` only after it is proven reliable):
 
   ```powershell
@@ -448,21 +448,21 @@ write the user's real app-data directory.
   ```
 
 - [ ] Test the output on a clean Windows user profile without Python installed.
-- [ ] Verify packaged data is written to local app data, not the installation
+- [x] Verify packaged data is written to local app data, not the installation
       directory, and survives app upgrades.
-- [ ] Scan the release output with Windows Security and investigate warnings.
-- [ ] Zip the tested `dist` folder with README/release notes and a checksum.
+- [x] Scan the release output with Windows Security and investigate warnings.
+- [x] Zip the tested `dist` folder with README/release notes and a checksum.
 - [ ] Optionally add an installer only after the portable packaged build passes.
 
 ## 19. Documentation and release handoff
 
-- [ ] Document installation, first launch, navigation, task management, Shopify
+- [x] Document installation, first launch, navigation, task management, Shopify
       tasks, reminders, client checks, history, settings, and data backup.
-- [ ] Document limitations: app must remain running; no FastDTR, messaging, or
+- [x] Document limitations: app must remain running; no FastDTR, messaging, or
       Shopify automation; one device/user; no cloud backup.
-- [ ] Add developer instructions for environment setup, architecture, data schema,
+- [x] Add developer instructions for environment setup, architecture, data schema,
       tests, building, and making schema migrations.
-- [ ] Add `CHANGELOG.md`, license/usage terms, and release notes.
+- [x] Add `CHANGELOG.md`, license/usage terms, and release notes.
 - [ ] Tag the tested commit as the first release and archive the exact artifact.
 
 ## 20. MVP definition of done
@@ -470,7 +470,7 @@ write the user's real app-data directory.
 The MVP is complete only when all of the following are true:
 
 - [ ] Every item in sections 1–19 that is not explicitly deferred is complete.
-- [ ] All automated quality commands pass.
+- [x] All automated quality commands pass.
 - [ ] All manual Windows acceptance scenarios pass in both source and packaged form.
 - [ ] No known issue can cause silent data loss, repeated notification spam, or an
       incorrect FastDTR reminder time.

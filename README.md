@@ -8,11 +8,11 @@ and stores its data locally without requiring an account or server.
 ## Project status
 
 The product rules, versioned local storage, core services, reminder engine, and
-four main application screens are implemented. The runnable Kivy app supports
-the active checklist, task/Shopify management, client-message checks, history,
-and immediately applied settings. The app also writes rotating local logs and
-surfaces storage recovery actions. Packaging and full manual Windows acceptance
-testing remain before the MVP release.
+four main application screens are implemented. Version 0.1.0 is packaged as a
+portable Windows `onedir` release with embedded Python, version metadata, an
+application icon, automated package validation, Windows Security scanning, and
+a SHA-256 checksum. Clean-profile and full hands-on Windows acceptance testing
+remain before the MVP can be declared complete.
 
 ## Project documents
 
@@ -20,6 +20,8 @@ testing remain before the MVP release.
 - [Implementation task plan](project/PROJECT%20TASK.md)
 - [Product rules and acceptance examples](docs/PRODUCT_RULES.md)
 - [Windows acceptance checklist](docs/WINDOWS_ACCEPTANCE.md)
+- [User guide](docs/USER_GUIDE.md)
+- [Development guide](docs/DEVELOPMENT.md)
 
 ## Decision log
 
@@ -99,18 +101,25 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts\verify_source.ps1
 The hands-on release scenarios are in
 [the Windows acceptance checklist](docs/WINDOWS_ACCEPTANCE.md).
 
-## Development build
+## Windows builds
 
-The reproducible release specification is created during the packaging
-milestone. Until then, a disposable bootstrap build can be produced with:
+Build and smoke-test a console-enabled diagnostic package first:
 
 ```powershell
-.\.venv\Scripts\python.exe -m PyInstaller --clean --noconfirm --windowed `
-  --onedir --name ShiftChecklist --add-data "shift_checklist.kv;." main.py
+powershell -NoProfile -ExecutionPolicy Bypass -File packaging\build.ps1 -Diagnostic
 ```
 
-The output is written to `dist\ShiftChecklist`. This interim command is for
-developer smoke testing, not release distribution.
+Build, validate, scan, and archive the windowed release:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File packaging\package_release.ps1
+```
+
+The reproducible `onedir` specification is
+[`packaging\shift_checklist.spec`](packaging/shift_checklist.spec). Diagnostic
+and release output is written under `dist`; release ZIPs and checksums are
+written under `release`. PyInstaller's reviewed optional/platform import list is
+documented in [`packaging\KNOWN_WARNINGS.md`](packaging/KNOWN_WARNINGS.md).
 
 ## Data and backups
 

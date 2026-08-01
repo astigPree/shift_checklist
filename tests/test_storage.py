@@ -47,6 +47,19 @@ def test_environment_can_override_default_data_directory(tmp_path: Path) -> None
     assert actual == expected.resolve()
 
 
+def test_default_data_directory_is_non_roaming_local_app_data() -> None:
+    expected = (
+        storage_module.PlatformDirs(
+            storage_module.DATA_APP_NAME,
+            appauthor=False,
+            roaming=False,
+        ).user_data_path
+        / "data"
+    ).resolve()
+
+    assert resolve_data_directory(environment={}) == expected
+
+
 def test_initialize_creates_all_versioned_documents(tmp_path: Path) -> None:
     service = StorageService(tmp_path)
 

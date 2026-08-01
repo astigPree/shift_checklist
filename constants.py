@@ -7,7 +7,7 @@ from enum import StrEnum
 APP_NAME = "Shift Checklist"
 APP_ID = "shift-checklist"
 APP_AUTHOR = "Shift Checklist"
-APP_VERSION = "0.1.0-dev"
+APP_VERSION = "0.1.0"
 SCHEMA_VERSION = 1
 DATA_DIRECTORY_ENV_VAR = "SHIFT_CHECKLIST_DATA_DIR"
 

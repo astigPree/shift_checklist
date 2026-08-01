@@ -18,6 +18,7 @@ htmlcov/
 # Packaging output
 build/
 dist/
+release/
 *.spec.bak
 
 # Runtime data and logs

@@ -121,6 +121,9 @@ class ShiftChecklistApp(App):
         Window.size = (1100, 720)
         root_path = resource_root()
         resource_add_path(str(root_path))
+        icon_path = root_path / "assets" / "icons" / "shift-checklist.png"
+        if icon_path.is_file():
+            Window.set_icon(str(icon_path))
         root = Builder.load_file(str(root_path / "shift_checklist.kv"))
         if not isinstance(root, ScreenManager):
             raise TypeError("shift_checklist.kv must define a ScreenManager root")
