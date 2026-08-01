@@ -1,76 +1,395 @@
 #:kivy 2.3.1
 #:import dp kivy.metrics.dp
 
+<AppButton@Button>:
+    background_normal: ""
+    background_color: (0.19, 0.31, 0.48, 1) if not self.disabled else (0.18, 0.21, 0.27, 1)
+    color: 0.96, 0.98, 1, 1
+    font_size: "14sp"
+
 <NavigationBar@BoxLayout>:
     size_hint_y: None
-    height: dp(56)
+    height: dp(58)
     spacing: dp(8)
-    padding: dp(12), dp(6)
+    padding: dp(16), dp(7)
     canvas.before:
         Color:
-            rgba: 0.09, 0.12, 0.18, 1
+            rgba: 0.075, 0.095, 0.14, 1
         Rectangle:
             pos: self.pos
             size: self.size
-    Button:
+    AppButton:
         text: "Today"
+        background_color: (0.22, 0.48, 0.75, 1) if app.root and app.root.current == "today" else (0.15, 0.22, 0.33, 1)
         on_release: app.root.current = "today"
-    Button:
+    AppButton:
         text: "Tasks"
+        background_color: (0.22, 0.48, 0.75, 1) if app.root and app.root.current == "tasks" else (0.15, 0.22, 0.33, 1)
         on_release: app.root.current = "tasks"
-    Button:
+    AppButton:
         text: "History"
+        background_color: (0.22, 0.48, 0.75, 1) if app.root and app.root.current == "history" else (0.15, 0.22, 0.33, 1)
         on_release: app.root.current = "history"
-    Button:
+    AppButton:
         text: "Settings"
+        background_color: (0.22, 0.48, 0.75, 1) if app.root and app.root.current == "settings" else (0.15, 0.22, 0.33, 1)
         on_release: app.root.current = "settings"
 
 <PageHeading@Label>:
     size_hint_y: None
-    height: dp(64)
-    color: 0.93, 0.96, 1, 1
+    height: dp(50)
+    color: 0.95, 0.97, 1, 1
     font_size: "26sp"
     bold: True
     halign: "left"
     text_size: self.size
     valign: "middle"
 
-<PlaceholderCard@BoxLayout>:
-    orientation: "vertical"
-    padding: dp(20)
+<SectionLabel@Label>:
+    size_hint_y: None
+    height: dp(34)
+    color: 0.73, 0.81, 0.91, 1
+    font_size: "15sp"
+    bold: True
+    halign: "left"
+    valign: "middle"
+    text_size: self.size
+
+<FieldLabel@Label>:
+    color: 0.78, 0.84, 0.92, 1
+    halign: "right"
+    valign: "middle"
+    text_size: self.size
+
+<Card@BoxLayout>:
+    padding: dp(15)
     spacing: dp(8)
     canvas.before:
         Color:
-            rgba: 0.12, 0.16, 0.23, 1
+            rgba: 0.105, 0.135, 0.19, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(10)]
+
+<ProgressCard>:
+    orientation: "vertical"
+    padding: dp(18)
+    spacing: dp(5)
+    canvas.before:
+        Color:
+            rgba: 0.12, 0.18, 0.27, 1
         RoundedRectangle:
             pos: self.pos
             size: self.size
             radius: [dp(12)]
+    Label:
+        text: root.summary_text
+        color: 0.96, 0.98, 1, 1
+        font_size: "23sp"
+        bold: True
+        halign: "left"
+        text_size: self.size
+    Label:
+        text: str(root.overdue) + " overdue · " + str(root.upcoming) + " upcoming/due"
+        color: (1, 0.62, 0.38, 1) if root.overdue else (0.58, 0.77, 0.68, 1)
+        font_size: "14sp"
+        halign: "left"
+        text_size: self.size
+
+<TaskItem>:
+    orientation: "horizontal"
+    size_hint_y: None
+    height: dp(116)
+    padding: dp(14), dp(10)
+    spacing: dp(10)
+    canvas.before:
+        Color:
+            rgba: 0.105, 0.135, 0.19, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(9)]
+        Color:
+            rgba: root.state_color
+        Rectangle:
+            pos: self.x, self.y
+            size: dp(5), self.height
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(2)
+        Label:
+            text: root.title_text
+            color: 0.94, 0.97, 1, 1
+            bold: True
+            font_size: "17sp"
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+        Label:
+            text: root.detail_text
+            color: 0.66, 0.74, 0.84, 1
+            font_size: "13sp"
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+        Label:
+            text: root.notes_text
+            color: 0.55, 0.63, 0.74, 1
+            font_size: "12sp"
+            shorten: True
+            shorten_from: "right"
+            halign: "left"
+            valign: "middle"
+            text_size: self.size
+    Label:
+        text: root.state_text
+        color: root.state_color
+        bold: True
+        font_size: "12sp"
+        size_hint_x: None
+        width: dp(90)
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(7)
+        size_hint_x: None
+        width: dp(122)
+        AppButton:
+            text: root.action_text
+            on_release: root.trigger_action()
+        AppButton:
+            text: root.secondary_text
+            opacity: 1 if root.secondary_text else 0
+            disabled: not root.secondary_text
+            on_release: root.trigger_secondary()
+
+<TaskForm>:
+    orientation: "vertical"
+    ScrollView:
+        do_scroll_x: False
+        GridLayout:
+            cols: 2
+            spacing: dp(10)
+            padding: dp(10)
+            size_hint_y: None
+            height: self.minimum_height
+            row_default_height: dp(44)
+            row_force_default: False
+            FieldLabel:
+                text: "Title *"
+            TextInput:
+                id: title_input
+                multiline: False
+            FieldLabel:
+                text: "Category *"
+            Spinner:
+                id: category_spinner
+                text: root.categories[0] if root.categories else "Choose category"
+                values: root.categories
+            FieldLabel:
+                text: "Task type"
+            Spinner:
+                id: type_spinner
+                text: "General"
+                values: ["General", "Shopify"]
+                on_text:
+                    root.shopify_enabled = self.text == "Shopify"
+                    recurrence_spinner.text = "One time" if root.shopify_enabled else recurrence_spinner.text
+            FieldLabel:
+                text: "Scheduled time"
+            TextInput:
+                id: schedule_input
+                multiline: False
+                hint_text: "e.g. 4:00 AM or 16:00"
+            FieldLabel:
+                text: "Reminder"
+            BoxLayout:
+                spacing: dp(8)
+                CheckBox:
+                    id: reminder_check
+                    size_hint_x: None
+                    width: dp(40)
+                Label:
+                    text: "Enable pre-due and due reminders"
+                    color: 0.82, 0.87, 0.94, 1
+                    halign: "left"
+                    text_size: self.size
+            FieldLabel:
+                text: "Lead minutes"
+            TextInput:
+                id: lead_input
+                text: "5"
+                multiline: False
+                input_filter: "int"
+            FieldLabel:
+                text: "Recurrence"
+            Spinner:
+                id: recurrence_spinner
+                text: "Daily"
+                values: ["Daily", "One time"]
+                disabled: root.shopify_enabled
+            FieldLabel:
+                text: "Target shift date"
+            TextInput:
+                id: shift_date_input
+                multiline: False
+                hint_text: "YYYY-MM-DD (required for one-time)"
+            FieldLabel:
+                text: "Enabled"
+            CheckBox:
+                id: enabled_check
+                active: True
+            FieldLabel:
+                text: "Notes"
+            TextInput:
+                id: notes_input
+                multiline: True
+                size_hint_y: None
+                height: dp(80)
+            FieldLabel:
+                text: "Shopify store/client"
+                opacity: 1 if root.shopify_enabled else 0
+            TextInput:
+                id: store_input
+                multiline: False
+                opacity: 1 if root.shopify_enabled else 0
+                disabled: not root.shopify_enabled
+            FieldLabel:
+                text: "Shopify description"
+                opacity: 1 if root.shopify_enabled else 0
+            TextInput:
+                id: description_input
+                multiline: True
+                size_hint_y: None
+                height: dp(70) if root.shopify_enabled else 0
+                opacity: 1 if root.shopify_enabled else 0
+                disabled: not root.shopify_enabled
+            FieldLabel:
+                text: "Requested at"
+                opacity: 1 if root.shopify_enabled else 0
+            TextInput:
+                id: requested_input
+                multiline: False
+                hint_text: "YYYY-MM-DD HH:MM"
+                opacity: 1 if root.shopify_enabled else 0
+                disabled: not root.shopify_enabled
+            FieldLabel:
+                text: "Priority"
+                opacity: 1 if root.shopify_enabled else 0
+            Spinner:
+                id: priority_spinner
+                text: "Normal"
+                values: ["Low", "Normal", "High", "Urgent"]
+                opacity: 1 if root.shopify_enabled else 0
+                disabled: not root.shopify_enabled
+            FieldLabel:
+                text: "Shopify status"
+                opacity: 1 if root.shopify_enabled else 0
+            Spinner:
+                id: shopify_status_spinner
+                text: "Pending"
+                values: ["Pending", "In Progress", "Waiting for Clarification", "Ready for Review", "Completed"]
+                opacity: 1 if root.shopify_enabled else 0
+                disabled: not root.shopify_enabled
 
 <TodayScreen>:
     BoxLayout:
         orientation: "vertical"
         canvas.before:
             Color:
-                rgba: 0.055, 0.075, 0.11, 1
+                rgba: 0.045, 0.06, 0.09, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
         BoxLayout:
             orientation: "vertical"
-            padding: dp(28), dp(18)
-            spacing: dp(16)
-            PageHeading:
-                text: "Today"
-            PlaceholderCard:
-                Label:
-                    text: "Shift Checklist is running"
-                    color: 0.93, 0.96, 1, 1
-                    font_size: "22sp"
-                Label:
-                    text: "Task data and progress arrive in the next milestone."
-                    color: 0.65, 0.72, 0.82, 1
-                    font_size: "16sp"
+            padding: dp(24), dp(12)
+            spacing: dp(10)
+            BoxLayout:
+                size_hint_y: None
+                height: dp(56)
+                PageHeading:
+                    text: "Today"
+                BoxLayout:
+                    orientation: "vertical"
+                    Label:
+                        text: root.clock_text
+                        color: 0.78, 0.85, 0.94, 1
+                        halign: "right"
+                        text_size: self.size
+                    Label:
+                        text: root.shift_text
+                        color: 0.55, 0.64, 0.75, 1
+                        font_size: "13sp"
+                        halign: "right"
+                        text_size: self.size
+            Label:
+                text: root.banner_text
+                size_hint_y: None
+                height: dp(42) if root.banner_visible else 0
+                opacity: 1 if root.banner_visible else 0
+                color: 0.98, 0.91, 0.66, 1
+                bold: True
+                canvas.before:
+                    Color:
+                        rgba: 0.35, 0.25, 0.08, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(8)]
+            BoxLayout:
+                size_hint_y: None
+                height: dp(124)
+                spacing: dp(10)
+                ProgressCard:
+                    id: progress_card
+                    size_hint_x: .34
+                Card:
+                    orientation: "vertical"
+                    Label:
+                        text: root.message_status
+                        color: 0.84, 0.9, 0.98, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                    AppButton:
+                        text: "Client Messages Checked"
+                        size_hint_y: None
+                        height: dp(40)
+                        on_release: root.open_message_check()
+                Card:
+                    orientation: "vertical"
+                    Label:
+                        text: root.next_reminder_text
+                        color: 0.84, 0.9, 0.98, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                    Label:
+                        text: root.overdue_text
+                        color: 0.96, 0.56, 0.48, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+            BoxLayout:
+                size_hint_y: None
+                height: dp(42)
+                SectionLabel:
+                    text: "SHIFT TASKS"
+                AppButton:
+                    text: "+ Add task"
+                    size_hint_x: None
+                    width: dp(120)
+                    on_release: root.open_add_task()
+            ScrollView:
+                do_scroll_x: False
+                bar_width: dp(9)
+                GridLayout:
+                    id: task_list
+                    cols: 1
+                    spacing: dp(8)
+                    size_hint_y: None
+                    height: self.minimum_height
         NavigationBar:
 
 <TaskManagementScreen>:
@@ -78,18 +397,47 @@
         orientation: "vertical"
         canvas.before:
             Color:
-                rgba: 0.055, 0.075, 0.11, 1
+                rgba: 0.045, 0.06, 0.09, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
         BoxLayout:
             orientation: "vertical"
-            padding: dp(28), dp(18)
-            PageHeading:
-                text: "Task Management"
+            padding: dp(24), dp(12)
+            spacing: dp(10)
+            BoxLayout:
+                size_hint_y: None
+                height: dp(56)
+                PageHeading:
+                    text: "Task Management"
+                AppButton:
+                    text: "+ General task"
+                    size_hint_x: None
+                    width: dp(138)
+                    on_release: root.open_add_form()
+                Widget:
+                    size_hint_x: None
+                    width: dp(8)
+                AppButton:
+                    text: "+ Shopify work"
+                    size_hint_x: None
+                    width: dp(138)
+                    on_release: root.open_shopify_form()
             Label:
-                text: "Task templates will be managed here."
-                color: 0.65, 0.72, 0.82, 1
+                text: root.summary_text
+                size_hint_y: None
+                height: dp(30)
+                color: 0.66, 0.73, 0.83, 1
+                halign: "left"
+                text_size: self.size
+            ScrollView:
+                do_scroll_x: False
+                GridLayout:
+                    id: template_list
+                    cols: 1
+                    spacing: dp(8)
+                    size_hint_y: None
+                    height: self.minimum_height
         NavigationBar:
 
 <HistoryScreen>:
@@ -97,18 +445,31 @@
         orientation: "vertical"
         canvas.before:
             Color:
-                rgba: 0.055, 0.075, 0.11, 1
+                rgba: 0.045, 0.06, 0.09, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
         BoxLayout:
             orientation: "vertical"
-            padding: dp(28), dp(18)
+            padding: dp(24), dp(12)
+            spacing: dp(10)
             PageHeading:
                 text: "History"
             Label:
-                text: "Closed shift records will be displayed here."
-                color: 0.65, 0.72, 0.82, 1
+                text: root.summary_text
+                size_hint_y: None
+                height: dp(30)
+                color: 0.66, 0.73, 0.83, 1
+                halign: "left"
+                text_size: self.size
+            ScrollView:
+                do_scroll_x: False
+                GridLayout:
+                    id: history_list
+                    cols: 1
+                    spacing: dp(8)
+                    size_hint_y: None
+                    height: self.minimum_height
         NavigationBar:
 
 <SettingsScreen>:
@@ -116,18 +477,123 @@
         orientation: "vertical"
         canvas.before:
             Color:
-                rgba: 0.055, 0.075, 0.11, 1
+                rgba: 0.045, 0.06, 0.09, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
         BoxLayout:
             orientation: "vertical"
-            padding: dp(28), dp(18)
+            padding: dp(24), dp(12)
             PageHeading:
                 text: "Settings"
-            Label:
-                text: "Reminder and shift settings will be configured here."
-                color: 0.65, 0.72, 0.82, 1
+            ScrollView:
+                do_scroll_x: False
+                GridLayout:
+                    cols: 2
+                    spacing: dp(10)
+                    padding: dp(8)
+                    size_hint_y: None
+                    height: self.minimum_height
+                    row_default_height: dp(44)
+                    SectionLabel:
+                        text: "REMINDERS & SHIFT"
+                    Widget:
+                    FieldLabel:
+                        text: "Desktop notifications"
+                    CheckBox:
+                        id: notifications_check
+                    FieldLabel:
+                        text: "Reminder sound"
+                    CheckBox:
+                        id: sound_check
+                    FieldLabel:
+                        text: "Sound file"
+                    TextInput:
+                        id: sound_path_input
+                        multiline: False
+                        hint_text: "Optional local sound path"
+                    FieldLabel:
+                        text: "Client check interval"
+                    TextInput:
+                        id: client_interval_input
+                        multiline: False
+                        input_filter: "int"
+                    FieldLabel:
+                        text: "Default lead minutes"
+                    TextInput:
+                        id: lead_input
+                        multiline: False
+                        input_filter: "int"
+                    FieldLabel:
+                        text: "Daily reset time"
+                    TextInput:
+                        id: reset_time_input
+                        multiline: False
+                        hint_text: "12:00 or 12:00 PM"
+                    FieldLabel:
+                        text: "Clock format"
+                    Spinner:
+                        id: time_format_spinner
+                        text: "12h"
+                        values: ["12h", "24h"]
+                    Widget:
+                    AppButton:
+                        text: "Save settings"
+                        size_hint_x: None
+                        width: dp(180)
+                        on_release: root.save_settings()
+                    SectionLabel:
+                        text: "CATEGORIES"
+                    Widget:
+                    FieldLabel:
+                        text: "New category"
+                    BoxLayout:
+                        spacing: dp(8)
+                        TextInput:
+                            id: category_input
+                            multiline: False
+                            hint_text: "Category name"
+                        AppButton:
+                            text: "Add"
+                            size_hint_x: None
+                            width: dp(74)
+                            on_release: root.add_category()
+                    Widget:
+                    GridLayout:
+                        id: category_list
+                        cols: 1
+                        spacing: dp(6)
+                        size_hint_y: None
+                        height: self.minimum_height
+                    SectionLabel:
+                        text: "LOCAL DATA"
+                    Widget:
+                    FieldLabel:
+                        text: "Data directory"
+                    Label:
+                        text: root.data_directory_text
+                        color: 0.72, 0.8, 0.9, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                    Widget:
+                    AppButton:
+                        text: "Open data folder"
+                        size_hint_x: None
+                        width: dp(180)
+                        on_release: root.open_data_directory()
+                    SectionLabel:
+                        text: "ABOUT"
+                    Widget:
+                    Widget:
+                    Label:
+                        text: root.about_text
+                        color: 0.68, 0.76, 0.86, 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                        size_hint_y: None
+                        height: dp(70)
         NavigationBar:
 
 ScreenManager:

@@ -219,7 +219,7 @@ JSON document. Keep task definitions separate from per-shift task occurrences.
 - [x] Mark remaining scheduled occurrences from the closed shift as `missed`.
 - [x] Keep unscheduled incomplete occurrences as pending in history or missed,
       according to the product decision in section 2, and test that rule.
-- [ ] Reschedule the next boundary whenever the reset-time setting changes.
+- [x] Reschedule the next boundary whenever the reset-time setting changes.
 - [x] Handle the app being left open across the reset boundary without requiring
       a restart.
 
@@ -240,9 +240,9 @@ JSON document. Keep task definitions separate from per-shift task occurrences.
 
 ### 6.6 Client-message check service
 
-- [ ] Record a check event with an optional note.
-- [ ] Return the most recent check for the active shift and globally.
-- [ ] Calculate the next reminder and reset/reschedule it after every check.
+- [x] Record a check event with an optional note.
+- [x] Return the most recent check for the active shift and globally.
+- [x] Calculate the next reminder and reset/reschedule it after every check.
 
 ## 7. Seed first-launch defaults
 
@@ -262,98 +262,98 @@ JSON document. Keep task definitions separate from per-shift task occurrences.
 - [x] Create the Kivy `App`, load the KV file explicitly, initialize services,
       open the active shift, and then display the first screen.
 - [x] Use `ScreenManager` navigation for Today, Tasks, History, and Settings.
-- [ ] Add a consistent navigation bar, page title, and current date/time.
-- [ ] Establish reusable colors, spacing, typography, button, form, and status
+- [x] Add a consistent navigation bar, page title, and current date/time.
+- [x] Establish reusable colors, spacing, typography, button, form, and status
       styles that remain legible at common Windows scaling levels.
-- [ ] Make long task lists scrollable and support keyboard/mouse interaction.
-- [ ] Display a recoverable error dialog for load/save/notification failures.
+- [x] Make long task lists scrollable and support keyboard/mouse interaction.
+- [x] Display a recoverable error dialog for load/save/notification failures.
 - [x] Save pending changes and stop scheduled callbacks cleanly on app exit.
 
 ## 9. Implement the Today screen
 
-- [ ] Display the active shift date and a clock that updates without blocking UI.
-- [ ] Display progress as `completed / total` plus counts for overdue and upcoming.
-- [ ] Render ordered task cards with title, category, scheduled time, state,
+- [x] Display the active shift date and a clock that updates without blocking UI.
+- [x] Display progress as `completed / total` plus counts for overdue and upcoming.
+- [x] Render ordered task cards with title, category, scheduled time, state,
       reminder indicator, notes preview, and complete/reopen action.
-- [ ] Visually distinguish completed, upcoming, due, and overdue tasks without
+- [x] Visually distinguish completed, upcoming, due, and overdue tasks without
       relying on color alone.
-- [ ] Add the **Client Messages Checked** action with optional-note dialog.
-- [ ] Display last checked and next reminder times.
-- [ ] Display the next scheduled reminder and the most urgent overdue task.
-- [ ] Add a shortcut to the add-task form.
-- [ ] Refresh immediately after task changes, completion, message checks, setting
+- [x] Add the **Client Messages Checked** action with optional-note dialog.
+- [x] Display last checked and next reminder times.
+- [x] Display the next scheduled reminder and the most urgent overdue task.
+- [x] Add a shortcut to the add-task form.
+- [x] Refresh immediately after task changes, completion, message checks, setting
       changes, and shift rollover.
-- [ ] Provide clear empty states for no tasks and no message checks.
+- [x] Provide clear empty states for no tasks and no message checks.
 
 ## 10. Implement task management
 
-- [ ] List all templates with enabled state, category, recurrence, schedule, and
+- [x] List all templates with enabled state, category, recurrence, schedule, and
       drag/move controls for ordering.
-- [ ] Build a reusable add/edit form for title, category, schedule, reminder,
+- [x] Build a reusable add/edit form for title, category, schedule, reminder,
       reminder lead, recurrence, one-time shift date, notes, and enabled state.
-- [ ] Show Shopify-specific fields only when the Shopify task type/category is
+- [x] Show Shopify-specific fields only when the Shopify task type/category is
       selected.
-- [ ] Validate in the form and again in the service before saving.
-- [ ] Add edit, enable/disable, and delete-confirmation actions.
-- [ ] Apply create/edit/delete/reorder changes to the Today screen consistently
+- [x] Validate in the form and again in the service before saving.
+- [x] Add edit, enable/disable, and delete-confirmation actions.
+- [x] Apply create/edit/delete/reorder changes to the Today screen consistently
       with the product rules in section 2.
-- [ ] Prevent duplicate submissions from repeated clicks.
-- [ ] Preserve form input if validation fails and focus the invalid field.
+- [x] Prevent duplicate submissions from repeated clicks.
+- [x] Preserve form input if validation fails and focus the invalid field.
 
 ## 11. Implement Shopify task workflow
 
-- [ ] Create Shopify work as a one-time task for the active or selected shift.
-- [ ] Capture store/client name, task description, request timestamp, priority,
+- [x] Create Shopify work as a one-time task for the active or selected shift.
+- [x] Capture store/client name, task description, request timestamp, priority,
       status, notes, and completion timestamp.
-- [ ] Permit valid status transitions and show the status on Today and History.
-- [ ] When status becomes `Completed`, complete its task occurrence and timestamp
+- [x] Permit valid status transitions and show the status on Today and History.
+- [x] When status becomes `Completed`, complete its task occurrence and timestamp
       it; define and test behavior when moved out of `Completed`.
-- [ ] Sort urgent/high-priority open work predictably without losing manual order.
-- [ ] Confirm that no Shopify or network API calls occur.
+- [x] Sort urgent/high-priority open work predictably without losing manual order.
+- [x] Confirm that no Shopify or network API calls occur.
 
 ## 12. Implement reminders and notifications
 
-- [ ] Use one Kivy `Clock` polling callback (for example every 15–30 seconds) so
+- [x] Use one Kivy `Clock` polling callback (for example every 15–30 seconds) so
       all reminder logic runs on the application event loop.
-- [ ] Calculate exact due datetimes using active shift semantics, including times
+- [x] Calculate exact due datetimes using active shift semantics, including times
       after midnight.
-- [ ] Fire the configured pre-due and due notification once per occurrence.
-- [ ] Continue showing overdue status in-app without repeatedly spamming desktop
+- [x] Fire the configured pre-due and due notification once per occurrence.
+- [x] Continue showing overdue status in-app without repeatedly spamming desktop
       notifications.
-- [ ] Cancel/suppress future notifications for completed, deleted, or disabled
+- [x] Cancel/suppress future notifications for completed, deleted, or disabled
       occurrences.
-- [ ] Schedule repeated client-message reminders independently of task reminders.
-- [ ] Use Plyer for desktop notifications and provide an in-app banner fallback
+- [x] Schedule repeated client-message reminders independently of task reminders.
+- [x] Use Plyer for desktop notifications and provide an in-app banner fallback
       when Windows notifications are unavailable or disabled.
-- [ ] Play the selected sound only if enabled; missing sound assets must not crash.
-- [ ] Persist reminder-fired flags so restarting near a due time does not duplicate
+- [x] Play the selected sound only if enabled; missing sound assets must not crash.
+- [x] Persist reminder-fired flags so restarting near a due time does not duplicate
       notifications.
-- [ ] Recalculate reminders after edits, completion/reopen, settings changes,
+- [x] Recalculate reminders after edits, completion/reopen, settings changes,
       message checks, wake-from-sleep, and shift rollover.
-- [ ] Document clearly that reminders run only while the app is running.
+- [x] Document clearly that reminders run only while the app is running.
 
 ## 13. Implement History
 
-- [ ] List past shifts newest first with date and completion summary.
-- [ ] Open a shift detail view containing completed, missed/pending, FastDTR,
+- [x] List past shifts newest first with date and completion summary.
+- [x] Open a shift detail view containing completed, missed/pending, FastDTR,
       Shopify, and client-message-check records.
-- [ ] Show task scheduled time and actual completion time.
-- [ ] Distinguish a task occurrence snapshot from the current template.
+- [x] Show task scheduled time and actual completion time.
+- [x] Distinguish a task occurrence snapshot from the current template.
 - [ ] Add simple date navigation/filtering if the history list becomes long.
-- [ ] Show clear empty and unavailable/corrupt-data states.
+- [x] Show clear empty and unavailable/corrupt-data states.
 
 ## 14. Implement Settings
 
-- [ ] Add controls for notifications, sound, default reminder lead, client-message
+- [x] Add controls for notifications, sound, default reminder lead, client-message
       interval, daily reset time, and category management.
-- [ ] Validate intervals and time values before saving.
-- [ ] Apply changes immediately and persist them atomically.
-- [ ] Warn before changing reset time if it would change the current active shift.
-- [ ] Prevent deleting a category that is in use, or require choosing a replacement.
-- [ ] Show the resolved local data directory and provide an “Open data folder”
+- [x] Validate intervals and time values before saving.
+- [x] Apply changes immediately and persist them atomically.
+- [x] Warn before changing reset time if it would change the current active shift.
+- [x] Prevent deleting a category that is in use, or require choosing a replacement.
+- [x] Show the resolved local data directory and provide an “Open data folder”
       action; keep arbitrary storage relocation out of MVP.
-- [ ] Do not expose nonfunctional auto-start or system-tray settings in MVP.
-- [ ] Add an About section with app version and the local-only/privacy statement.
+- [x] Do not expose nonfunctional auto-start or system-tray settings in MVP.
+- [x] Add an About section with app version and the local-only/privacy statement.
 
 ## 15. Logging, resilience, and privacy
 
@@ -395,19 +395,19 @@ write the user's real app-data directory.
 
 ### 16.4 Reminder/message tests
 
-- [ ] Test pre-due, due, and overdue boundaries.
-- [ ] Test notification deduplication across multiple polling ticks and restarts.
-- [ ] Test completed/deleted/edited task suppression and rescheduling.
-- [ ] Test client-check interval calculation and repeated reminder reset.
-- [ ] Test notification and sound failure fallbacks.
+- [x] Test pre-due, due, and overdue boundaries.
+- [x] Test notification deduplication across multiple polling ticks and restarts.
+- [x] Test completed/deleted/edited task suppression and rescheduling.
+- [x] Test client-check interval calculation and repeated reminder reset.
+- [x] Test notification and sound failure fallbacks.
 
 ### 16.5 UI smoke tests
 
-- [ ] Test app startup, screen navigation, add/edit/delete, complete/reopen, client
+- [x] Test app startup, screen navigation, add/edit/delete, complete/reopen, client
       check, Shopify status change, history view, settings save, and clean exit.
 - [ ] Run smoke tests with empty, typical, and large data sets.
 
-- [ ] Make these local quality commands pass:
+- [x] Make these local quality commands pass:
 
   ```powershell
   python -m ruff check .
@@ -487,10 +487,10 @@ Follow this order so every milestone ends in a runnable or testable state:
 2. [x] Environment, skeleton, and minimal Kivy window (sections 3–4).
 3. [x] Schemas, models, safe storage, and tests (sections 5–6.2, 16.1–16.2).
 4. [x] Shift/task logic, seed data, and tests (sections 6.3–7, 16.3).
-5. [ ] App shell and Today screen with persistence (sections 8–9).
-6. [ ] Task management and Shopify workflow (sections 10–11).
-7. [ ] Reminder/client-check engine and tests (sections 6.6, 12, 16.4).
-8. [ ] History and settings (sections 13–14).
+5. [x] App shell and Today screen with persistence (sections 8–9).
+6. [x] Task management and Shopify workflow (sections 10–11).
+7. [x] Reminder/client-check engine and tests (sections 6.6, 12, 16.4).
+8. [x] History and settings (sections 13–14).
 9. [ ] Resilience, UI smoke tests, and full manual QA (sections 15–17).
 10. [ ] Packaging, clean-machine validation, documentation, and release
        (sections 18–20).

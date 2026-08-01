@@ -7,11 +7,11 @@ and stores its data locally without requiring an account or server.
 
 ## Project status
 
-The product rules, application bootstrap, versioned storage, and core shift/task
-services are complete. A runnable Kivy shell opens the active overnight shift,
-seeds editable first-launch defaults exactly once, and automatically rolls over
-at the configured boundary. The screens remain placeholders until the UI and
-reminder milestone.
+The product rules, versioned local storage, core services, reminder engine, and
+four main application screens are implemented. The runnable Kivy app supports
+the active checklist, task/Shopify management, client-message checks, history,
+and immediately applied settings. Packaging, resilience hardening, and full
+manual Windows acceptance testing remain before the MVP release.
 
 ## Project documents
 
@@ -72,8 +72,9 @@ and development dependency versions are pinned for reproducible setup.
 .\.venv\Scripts\python.exe main.py
 ```
 
-The current shell opens the four planned screens. Most controls are placeholders
-until their implementation milestone is complete.
+The app opens the active shift on Today. Use the bottom navigation to manage
+task templates, review closed-shift history, or change settings. All user
+mutations are saved immediately to the local JSON documents.
 
 ## Quality checks
 
@@ -83,8 +84,9 @@ until their implementation milestone is complete.
 powershell -ExecutionPolicy Bypass -File scripts\smoke_test.ps1
 ```
 
-The smoke-test script briefly opens the real Kivy window and closes it
-automatically. It is useful after dependency or packaging changes.
+The smoke-test script opens the real Kivy window, cycles through all four
+screens, and closes it automatically. It is useful after UI, dependency, or
+packaging changes.
 
 ## Development build
 
@@ -129,8 +131,8 @@ For isolated development data:
   later application logic failures.
 - Kivy diagnostic logs are written below `%USERPROFILE%\.kivy\logs` during
   development.
-- Windows notifications are not wired yet; their in-app fallback is implemented
-  with the reminder milestone.
+- If Windows notifications are unavailable, reminders still appear in the
+  in-app banner. Check the Kivy log for the platform-provider error.
 
 ## Project structure
 

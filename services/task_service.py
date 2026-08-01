@@ -7,7 +7,7 @@ from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from typing import Any
 
-from constants import LiveTaskState, ShopifyStatus, TaskStatus, TaskType
+from constants import LiveTaskState, Priority, ShopifyStatus, TaskStatus, TaskType
 from models import (
     DailyRecord,
     DailyRecordsDocument,
@@ -269,11 +269,27 @@ class TaskService:
         return sorted(
             views,
             key=lambda view: (
+                self._open_shopify_priority(view.occurrence),
                 view.occurrence.sort_order,
                 view.occurrence.title,
                 view.occurrence.id,
             ),
         )
+
+    @staticmethod
+    def _open_shopify_priority(occurrence: TaskOccurrence) -> int:
+        """Promote urgent/high open Shopify work while retaining manual order."""
+
+        if (
+            occurrence.status is TaskStatus.PENDING
+            and occurrence.task_type is TaskType.SHOPIFY
+            and occurrence.shopify_details is not None
+        ):
+            if occurrence.shopify_details.priority is Priority.URGENT:
+                return -2
+            if occurrence.shopify_details.priority is Priority.HIGH:
+                return -1
+        return 0
 
     def _validate_category(self, category: str) -> None:
         categories = self.storage.load_settings().settings.categories

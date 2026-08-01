@@ -8,7 +8,14 @@ from pathlib import Path
 
 import pytest
 
-from constants import LiveTaskState, Recurrence, ShopifyStatus, TaskStatus, TaskType
+from constants import (
+    LiveTaskState,
+    Priority,
+    Recurrence,
+    ShopifyStatus,
+    TaskStatus,
+    TaskType,
+)
 from models import ShopifyDetails, TaskTemplate
 from services import (
     CategoryNotFoundError,
@@ -306,3 +313,37 @@ def test_category_filter_returns_only_matching_occurrences(
     filtered = task_service.list_occurrences(category="FastDTR")
 
     assert [view.occurrence.title for view in filtered] == ["Attendance"]
+
+
+def test_open_shopify_priority_promotes_urgent_then_high_without_losing_manual_order(
+    task_context: tuple[StorageService, MutableClock, ShiftService, TaskService],
+) -> None:
+    _storage, _clock, _shift_service, task_service = task_context
+    task_service.add_task(make_task("General first"))
+    for title, priority in (
+        ("High first", Priority.HIGH),
+        ("Urgent first", Priority.URGENT),
+        ("High second", Priority.HIGH),
+    ):
+        task_service.add_task(
+            make_task(
+                title,
+                category="Shopify",
+                recurrence=Recurrence.ONE_TIME,
+                target_shift_date=date(2026, 8, 1),
+                task_type=TaskType.SHOPIFY,
+                shopify_details=ShopifyDetails(
+                    store_name="Store",
+                    description=title,
+                    requested_at=datetime(2026, 8, 1, 20, tzinfo=MANILA),
+                    priority=priority,
+                ),
+            )
+        )
+
+    assert [view.occurrence.title for view in task_service.list_occurrences()] == [
+        "Urgent first",
+        "High first",
+        "High second",
+        "General first",
+    ]

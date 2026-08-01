@@ -7,7 +7,21 @@ from services.history_service import (
     HistoryService,
     ShiftHistoryDetail,
 )
+from services.message_check_service import MessageCheckService
+from services.reminder_service import (
+    KivySoundBackend,
+    PlyerNotificationBackend,
+    ReminderEvent,
+    ReminderKind,
+    ReminderService,
+)
 from services.seed_service import create_default_tasks, seed_default_tasks
+from services.settings_service import (
+    CategoryInUseError,
+    ResetTimeConfirmationRequired,
+    SettingsService,
+    UnsafeResetTimeChange,
+)
 from services.shift_service import (
     ShiftService,
     ShiftStateError,
@@ -36,11 +50,19 @@ from services.task_service import (
 __all__ = (
     "ServiceContainer",
     "CategoryNotFoundError",
+    "CategoryInUseError",
     "ConfirmationRequiredError",
     "DailySummary",
     "HistoryNotFoundError",
     "HistoryService",
+    "KivySoundBackend",
+    "MessageCheckService",
     "OccurrenceView",
+    "PlyerNotificationBackend",
+    "ReminderEvent",
+    "ReminderKind",
+    "ReminderService",
+    "ResetTimeConfirmationRequired",
     "ShiftHistoryDetail",
     "ShiftService",
     "ShiftStateError",
@@ -49,8 +71,10 @@ __all__ = (
     "StorageNotice",
     "StorageRecoveryError",
     "StorageService",
+    "SettingsService",
     "TaskNotFoundError",
     "TaskService",
+    "UnsafeResetTimeChange",
     "UnsupportedSchemaVersionError",
     "resolve_data_directory",
     "active_shift_date",

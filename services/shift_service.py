@@ -164,6 +164,7 @@ class ShiftService:
             task_document.tasks,
             expected_date,
             synchronized_at=current,
+            reset_time=settings.reset_time,
         ):
             changed = True
 
@@ -204,6 +205,7 @@ class ShiftService:
         shift_date: date,
         *,
         synchronized_at: datetime,
+        reset_time: time,
     ) -> bool:
         applicable = {
             template.id: template
@@ -223,7 +225,12 @@ class ShiftService:
                     changed = True
                 continue
             seen_template_ids.add(template.id)
-            updated = self._snapshot_with_template(occurrence, template)
+            updated = self._snapshot_with_template(
+                occurrence,
+                template,
+                synchronized_at=synchronized_at,
+                reset_time=reset_time,
+            )
             synchronized.append(updated)
             if updated.to_dict() != occurrence.to_dict():
                 changed = True
@@ -246,7 +253,11 @@ class ShiftService:
 
     @staticmethod
     def _snapshot_with_template(
-        occurrence: TaskOccurrence, template: TaskTemplate
+        occurrence: TaskOccurrence,
+        template: TaskTemplate,
+        *,
+        synchronized_at: datetime,
+        reset_time: time,
     ) -> TaskOccurrence:
         shopify_details = (
             ShopifyDetails.from_dict(template.shopify_details.to_dict())
@@ -262,6 +273,25 @@ class ShiftService:
             elif status is TaskStatus.COMPLETED:
                 status = TaskStatus.PENDING
                 completed_at = None
+        pre_due_fired = occurrence.pre_due_reminder_fired
+        due_fired = occurrence.due_reminder_fired
+        reminder_changed = (
+            occurrence.reminder_enabled != template.reminder_enabled
+            or occurrence.scheduled_time != template.scheduled_time
+            or occurrence.reminder_lead_minutes != template.reminder_lead_minutes
+        )
+        if reminder_changed and template.reminder_enabled and template.scheduled_time:
+            new_due = scheduled_datetime(
+                occurrence.shift_date,
+                template.scheduled_time,
+                reset_time,
+                synchronized_at.tzinfo,
+            )
+            new_pre_due = new_due - timedelta(minutes=template.reminder_lead_minutes)
+            if new_due > synchronized_at:
+                due_fired = False
+            if new_pre_due > synchronized_at:
+                pre_due_fired = False
         return TaskOccurrence(
             id=occurrence.id,
             template_id=template.id,
@@ -277,8 +307,8 @@ class ShiftService:
             shopify_details=shopify_details,
             status=status,
             completed_at=completed_at,
-            pre_due_reminder_fired=occurrence.pre_due_reminder_fired,
-            due_reminder_fired=occurrence.due_reminder_fired,
+            pre_due_reminder_fired=pre_due_fired,
+            due_reminder_fired=due_fired,
             created_at=occurrence.created_at,
             extra=occurrence.extra,
         )

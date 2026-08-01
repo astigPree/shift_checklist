@@ -6,7 +6,16 @@ import pytest
 
 from constants import APP_NAME, APP_VERSION, DEFAULT_CATEGORIES
 from main import ShiftChecklistApp, parse_args, resource_root
-from services import HistoryService, ServiceContainer, ShiftService, StorageService, TaskService
+from services import (
+    HistoryService,
+    MessageCheckService,
+    ReminderService,
+    ServiceContainer,
+    SettingsService,
+    ShiftService,
+    StorageService,
+    TaskService,
+)
 
 
 def test_application_metadata_is_present() -> None:
@@ -26,6 +35,9 @@ def test_application_uses_service_container(tmp_path: Path) -> None:
     assert isinstance(app.services.get("shift"), ShiftService)
     assert isinstance(app.services.get("tasks"), TaskService)
     assert isinstance(app.services.get("history"), HistoryService)
+    assert isinstance(app.services.get("messages"), MessageCheckService)
+    assert isinstance(app.services.get("reminders"), ReminderService)
+    assert isinstance(app.services.get("settings"), SettingsService)
 
 
 def test_service_container_registers_and_returns_a_service() -> None:
